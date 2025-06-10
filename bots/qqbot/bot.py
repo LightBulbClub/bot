@@ -1,3 +1,12 @@
+from core.types import MsgInfo, Session
+from core.terminate import cleanup_sessions
+from core.parser.message import parser
+from core.constants.path import assets_path
+from core.config import Config
+from core.builtins import Info, PrivateAssets
+from core.bot_init import init_async, load_prompt
+from bots.qqbot.message import MessageSession, FetchTarget
+from bots.qqbot.info import *
 import asyncio
 import os
 import re
@@ -6,15 +15,8 @@ import sys
 import botpy
 from botpy.message import C2CMessage, DirectMessage, GroupMessage, Message
 
-from core.bot_init import init_async, load_prompt
-from core.builtins import Info, PrivateAssets
-from core.config import Config
-from core.constants.path import assets_path
-from core.parser.message import parser
-from core.terminate import cleanup_sessions
-from core.types import MsgInfo, Session
-from .info import *
-from .message import MessageSession, FetchTarget
+sys.path.append(os.getcwd())
+
 
 Info.dirty_word_check = Config("enable_dirty_check", False)
 Info.use_url_manager = Config("enable_urlmanager", False)
@@ -176,7 +178,7 @@ class MyClient(botpy.Client):
         await parser(msg, prefix=prefix, require_enable_modules=require_enable_modules)
 
 
-if Config("enable", False, table_name="bot_qqbot"):
+if Config("enable", False, table_name="bot_qqbot") or __name__ == "__main__":
     loop = asyncio.get_event_loop()
     try:
         intents = botpy.Intents.none()

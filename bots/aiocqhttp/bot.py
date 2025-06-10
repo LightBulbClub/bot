@@ -1,3 +1,18 @@
+from core.types import MsgInfo, Session
+from core.tos import tos_report
+from core.terminate import cleanup_sessions
+from core.parser.message import parser
+from core.logger import Logger
+from core.i18n import Locale
+from core.database.models import SenderInfo, TargetInfo, UnfriendlyActionRecords
+from core.constants.path import assets_path
+from core.constants.default import issue_url_default, ignored_sender_default, qq_host_default
+from core.config import Config
+from core.builtins import Info, PrivateAssets, Temp, command_prefix
+from core.bot_init import load_prompt, init_async
+from bots.aiocqhttp.message import MessageSession, FetchTarget
+from bots.aiocqhttp.info import *
+from bots.aiocqhttp.client import bot
 import html
 import logging
 import os
@@ -8,21 +23,7 @@ import orjson as json
 from aiocqhttp import Event
 from hypercorn import Config as HyperConfig
 
-from core.bot_init import load_prompt, init_async
-from core.builtins import Info, PrivateAssets, Temp, command_prefix
-from core.config import Config
-from core.constants.default import issue_url_default, ignored_sender_default, qq_host_default
-from core.constants.path import assets_path
-from core.database.models import SenderInfo, TargetInfo, UnfriendlyActionRecords
-from core.i18n import Locale
-from core.logger import Logger
-from core.parser.message import parser
-from core.terminate import cleanup_sessions
-from core.tos import tos_report
-from core.types import MsgInfo, Session
-from .client import bot
-from .info import *
-from .message import MessageSession, FetchTarget
+sys.path.append(os.getcwd())
 
 
 Info.dirty_word_check = Config("enable_dirty_check", False)
@@ -264,7 +265,7 @@ async def _():
 
 
 qq_host = Config("qq_host", default=qq_host_default, table_name="bot_aiocqhttp")
-if qq_host and Config("enable", False, table_name="bot_aiocqhttp"):
+if qq_host and (Config("enable", False, table_name="bot_aiocqhttp") or __name__ == "__main__"):
     argv = sys.argv
     Info.client_name = client_name
     HyperConfig.startup_timeout = 120

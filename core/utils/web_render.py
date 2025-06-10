@@ -11,7 +11,7 @@ web_render = Config("web_render", cfg_type=str, secret=True, get_url=True)
 
 def webrender(
     method: str = "",
-    url: Optional[str] = None,
+    url: str = "",
     _ignore_status=False,
 ) -> str:
     """根据请求方法生成 WebRender URL。
@@ -20,6 +20,9 @@ def webrender(
     :param url: 若 method 为 source，则指定请求的 URL。
     :returns: 生成的 WebRender URL。
     """
+    if not web_render:
+        return ""
+
     if method == "source":
         url = "" if not url else url
         if Info.web_render_status or _ignore_status:
@@ -44,11 +47,11 @@ async def check_web_render() -> bool:
             webrender("source", ping_url, _ignore_status=True),
             200,
             request_private_ip=True,
+            logging_err_resp=False
         )
         Logger.success("[WebRender] WebRender is working as expected.")
     except Exception:
         Logger.error("[WebRender] WebRender is not working as expected.")
-        Logger.exception()
         web_render_status = False
 
     return web_render_status

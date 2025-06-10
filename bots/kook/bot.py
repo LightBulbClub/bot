@@ -1,20 +1,22 @@
+from core.types import MsgInfo, Session
+from core.terminate import cleanup_sessions
+from core.parser.message import parser
+from core.constants.path import assets_path
+from core.constants.default import ignored_sender_default
+from core.config import Config
+from core.builtins import Info, PrivateAssets
+from core.bot_init import load_prompt, init_async
+from bots.kook.message import MessageSession, FetchTarget
+from bots.kook.info import *
+from bots.kook.client import bot
 import asyncio
 import os
 import sys
 
 from khl import Message, MessageTypes
 
-from core.bot_init import load_prompt, init_async
-from core.builtins import Info, PrivateAssets
-from core.config import Config
-from core.constants.default import ignored_sender_default
-from core.constants.path import assets_path
-from core.parser.message import parser
-from core.terminate import cleanup_sessions
-from core.types import MsgInfo, Session
-from .client import bot
-from .info import *
-from .message import MessageSession, FetchTarget
+sys.path.append(os.getcwd())
+
 
 Info.dirty_word_check = Config("enable_dirty_check", False)
 Info.use_url_manager = Config("enable_urlmanager", False)
@@ -61,7 +63,7 @@ async def _(b: bot):
     await load_prompt(FetchTarget)
 
 
-if Config("enable", False, table_name="bot_kook"):
+if Config("enable", False, table_name="bot_kook") or __name__ == "__main__":
     loop = asyncio.get_event_loop()
     try:
         Info.client_name = client_name

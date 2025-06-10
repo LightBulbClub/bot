@@ -1,20 +1,22 @@
+from core.types import MsgInfo, Session
+from core.terminate import cleanup_sessions
+from core.parser.message import parser
+from core.constants.path import assets_path
+from core.constants.default import ignored_sender_default
+from core.config import Config
+from core.builtins import Info, PrivateAssets
+from core.bot_init import load_prompt, init_async
+from bots.aiogram.message import MessageSession, FetchTarget
+from bots.aiogram.info import *
+from bots.aiogram.client import dp, bot
 import asyncio
 import os
 import sys
 
 from aiogram import types
 
-from core.bot_init import load_prompt, init_async
-from core.builtins import Info, PrivateAssets
-from core.config import Config
-from core.constants.default import ignored_sender_default
-from core.constants.path import assets_path
-from core.parser.message import parser
-from core.terminate import cleanup_sessions
-from core.types import MsgInfo, Session
-from .client import dp, bot
-from .info import *
-from .message import MessageSession, FetchTarget
+sys.path.append(os.getcwd())
+
 
 PrivateAssets.set(os.path.join(assets_path, "private", "aiogram"))
 ignored_sender = Config("ignored_sender", ignored_sender_default)
@@ -57,7 +59,7 @@ async def on_shutdown():
     await cleanup_sessions()
 
 
-if Config("enable", False, table_name="bot_aiogram"):
+if Config("enable", False, table_name="bot_aiogram") or __name__ == "__main__":
     Info.client_name = client_name
     if "subprocess" in sys.argv:
         Info.subprocess = True

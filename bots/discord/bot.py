@@ -1,3 +1,15 @@
+from core.types import MsgInfo, Session
+from core.terminate import cleanup_sessions
+from core.parser.message import parser
+from core.logger import Logger
+from core.constants.path import assets_path
+from core.constants.default import ignored_sender_default
+from core.config import Config
+from core.builtins import Info, PrivateAssets, command_prefix
+from core.bot_init import init_async, load_prompt
+from bots.discord.message import MessageSession, FetchTarget
+from bots.discord.info import *
+from bots.discord.client import client
 import asyncio
 import importlib
 import os
@@ -7,18 +19,8 @@ import sys
 import discord
 import orjson as json
 
-from core.bot_init import init_async, load_prompt
-from core.builtins import Info, PrivateAssets, command_prefix
-from core.config import Config
-from core.constants.default import ignored_sender_default
-from core.constants.path import assets_path
-from core.logger import Logger
-from core.parser.message import parser
-from core.terminate import cleanup_sessions
-from core.types import MsgInfo, Session
-from .client import client
-from .info import *
-from .message import MessageSession, FetchTarget
+sys.path.append(os.getcwd())
+
 
 PrivateAssets.set(os.path.join(assets_path, "private", "discord"))
 dc_token = Config("discord_token", cfg_type=str, secret=True, table_name="bot_discord")
@@ -129,7 +131,7 @@ async def on_message(message):
     await parser(msg, prefix=prefix)
 
 
-if Config("enable", False, table_name="bot_discord"):
+if Config("enable", False, table_name="bot_discord") or __name__ == "__main__":
     loop = asyncio.new_event_loop()
     try:
         Info.client_name = client_name

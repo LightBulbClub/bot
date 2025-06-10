@@ -1,3 +1,22 @@
+from core.types import MsgInfo, Session
+from core.terminate import cleanup_sessions
+from core.scheduler import Scheduler
+from core.queue import JobQueue
+from core.parser.message import parser
+from core.logger import Logger
+from core.loader import ModulesManager
+from core.i18n import Locale
+from core.extra.scheduler import load_extra_schedulers
+from core.database.local import CSRF_TOKEN_EXPIRY, CSRFTokenRecords
+from core.database.models import AnalyticsData, SenderInfo, TargetInfo, MaliciousLoginRecords
+from core.constants.path import assets_path, config_path, logs_path, webui_path
+from core.constants import config_filename
+from core.config import Config
+from core.builtins import Info, PrivateAssets, Temp
+from core.bot_init import init_async
+from bots.web.utils import find_available_port, generate_webui_config, get_local_ip
+from bots.web.message import MessageSession
+from bots.web.info import *
 import asyncio
 import glob
 import os
@@ -27,25 +46,6 @@ from tortoise.expressions import Q
 
 sys.path.append(os.getcwd())
 
-from bots.web.info import *  # noqa: E402
-from bots.web.message import MessageSession  # noqa: E402
-from bots.web.utils import find_available_port, generate_webui_config, get_local_ip  # noqa: E402
-from core.bot_init import init_async  # noqa: E402
-from core.builtins import Info, PrivateAssets, Temp  # noqa: E402
-from core.config import Config  # noqa: E402
-from core.constants import config_filename  # noqa: E402
-from core.constants.path import assets_path, config_path, logs_path, webui_path  # noqa: E402
-from core.database.models import AnalyticsData, SenderInfo, TargetInfo, MaliciousLoginRecords  # noqa: E402
-from core.database.local import CSRF_TOKEN_EXPIRY, CSRFTokenRecords  # noqa: E402
-from core.extra.scheduler import load_extra_schedulers  # noqa: E402
-from core.i18n import Locale  # noqa: E402
-from core.loader import ModulesManager  # noqa: E402
-from core.logger import Logger  # noqa: E402
-from core.parser.message import parser  # noqa: E402
-from core.queue import JobQueue  # noqa: E402
-from core.scheduler import Scheduler  # noqa: E402
-from core.terminate import cleanup_sessions  # noqa: E402
-from core.types import MsgInfo, Session  # noqa: E402
 
 started_time = datetime.now()
 PrivateAssets.set(os.path.join(assets_path, "private", "web"))
@@ -808,8 +808,15 @@ async def websocket_logs(websocket: WebSocket):
             expanded_history = ["\n".join(item) if isinstance(item, list) else item for item in logs_history]
             await websocket.send_text("\n".join(expanded_history))
 
+        current_date = datetime.today().strftime("%Y-%m-%d")
+
         while True:
-            today_logs = glob.glob(f"{logs_path}/*_{datetime.today().strftime("%Y-%m-%d")}.log")
+            new_date = datetime.today().strftime("%Y-%m-%d")
+            if new_date != current_date:
+                last_file_line_count.clear()
+                current_date = new_date
+
+            today_logs = glob.glob(f"{logs_path}/*_{current_date}.log")
             today_logs = [log for log in today_logs if "console" not in os.path.basename(log)]
             today_logs.sort(
                 key=lambda line: (
@@ -861,6 +868,7 @@ async def websocket_logs(websocket: WebSocket):
                     last_file_line_count[log_file] = current_line_count
 
             await asyncio.sleep(0.1)
+
     except WebSocketDisconnect:
         pass
     except Exception:
@@ -936,7 +944,7 @@ async def route_handler(full_path: str):
     raise HTTPException(status_code=404, detail="Not found")
 
 
-if Config("enable", True, table_name="bot_web"):
+if Config("enable", True, table_name="bot_web") or __name__ == "__main__":
     Info.client_name = client_name
     if "subprocess" in sys.argv:
         Info.subprocess = True
