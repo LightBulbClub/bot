@@ -23,12 +23,6 @@ encode = "UTF-8"
 
 bots_and_required_configs = {
     "aiocqhttp": ["qq_host"],
-    "discord": ["discord_token"],
-    "aiogram": ["telegram_token"],
-    "kook": ["kook_token"],
-    "matrix": ["matrix_homeserver", "matrix_user", "matrix_device_id", "matrix_token"],
-    "qqbot": ["qq_bot_appid", "qq_bot_secret"],
-    "web": ["jwt_secret"],
 }
 
 
@@ -59,23 +53,6 @@ def init_bot():
             modules={"models": ["core.database.models"]}
         )
         await Tortoise.generate_schemas(safe=True)
-
-        query_dbver = await DBVersion.all().first()
-        if not query_dbver:
-            from core.scripts.convert_database import convert_database
-
-            await Tortoise.close_connections()
-            await convert_database()
-            Logger.success("Database converted successfully!")
-        elif (current_ver := query_dbver.version) < (target_ver := database_version):
-            Logger.info(f"Updating database from {current_ver} to {target_ver}...")
-            from core.database.update import update_database
-
-            await Tortoise.close_connections()
-            await update_database()
-            Logger.success("Database updated successfully!")
-        else:
-            await Tortoise.close_connections()
 
         base_superuser = Config(
             "base_superuser", base_superuser_default, cfg_type=(str, list)

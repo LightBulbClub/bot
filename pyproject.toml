@@ -1,109 +1,8 @@
-[tool.poetry]
-name = "akari-bot"
-version = "0.1.0"
-description = ""
-authors = [
-    "OasisAkari <oasisakari@teahou.se>",
-    "Dianliang233 <dianliang@teahou.se>",
-    "DoroWolf <dorowolf@tehou.se>",
-    "nullcat <null@teahou.se>",
-    "_LittleC_ <i@ltlec.com>",
-]
-license = "AGPL-3.0"
-readme = "README.md"
-package-mode = false
-
-[tool.poetry.dependencies]
-python = "^3.12.0"
-
-# lib
-cryptography = "^45.0.0"
-poetry-plugin-export = "^1.9.0"
-pre-commit = "^4.0.0"
-pycryptodome = "^3.18.0"
-pywin32 = { version = "^308", platform = "win32" }
-
-# bots
-aiocqhttp = "^1.4.3"
-aiogram = "^3.4.1"
-argon2-cffi = "^25.0.0"
-botpy = {git = "https://github.com/Teahouse-Studios/botpy.git"}
-fastapi = "^0.115.0"
-ffmpy = "^0.5.0"
-flask = "^3.1.0"
-khl-py = "^0.3.16"
-matrix-nio = "^0.25.0"
-py-cord = "^2.5.0"
-pyjwt = {extras = ["crypto"], version = "^2.8.0"}
-qq-botpy = "^1.2.1"
-slowapi = "^0.1.9"
-uvicorn = {extras = ["standard"], version = "^0.34.0"}
-
-# console
-inputimeout = "^1.0.4"
-prompt-toolkit = "^3.0.47"
-
-# core
-cattrs = "^24.1.2"
-filetype = "^1.2.0"
-orjson = "^3.10.9"
-Pillow = "^11.0.0"
-tenacity = "^9.0.0"
-
-# core.config
-tomlkit = "^0.13.2"
-
-# core.database
-tortoise-orm = {extras = ["asyncmy"], version = "^0.25.0"}
-
-# core.http
-aiofile = "^3.8.1"
-attrs = "^24.2.0"
-httpx = "^0.28.1"
-jinja2 = "^3.1.6"
-
-# core.logger
-loguru = "^0.7.0"
-
-# core.utils
-ff3 = "^1.0.2"
-psutil = "^7.0.0"
-tabulate = "^0.9.0"
-
-# core.scheduler
-APScheduler = "^3.9.1-post.0"
-
-# modules.core
-matplotlib = "^3.6.3"
-py-cpuinfo = "^9.0.0"
-
-# modules
-beautifulsoup4 = "^4.11.1"
-emoji = "^2.12.1"
-feedparser = "^6.0.10"
-google-play-scraper = "^1.2.2"
-gql = "^3.4.0"
-langconv = {git = "https://github.com/OasisAkari/langconv.py.git"}
-mcstatus = "^12.0.0"
-numpy = "<2.2.7"
-openai = "^1.6.1"
-pandas = "^2.2.0"
-pint = "^0.24.0"
-python-whois = "^0.9.0"
-rdkit = "^2025.0.0"
-simpleeval = "^1.0.0"
-webcolors = "^24.0.0"
-wolframalpha = "^5.0.0"
-
-# uncategorized
-
-[tool.poetry.group.dev.dependencies]
-autopep8 = "^2.0.2"
-pycodestyle = "2.13.0"
-
+[tool.pdm]
+distribution = false
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
 [tool.autopep8]
 max_line_length = 120
@@ -113,3 +12,78 @@ aggressive = 3
 
 [tool.pyright]
 reportUndefinedVariable = "error"
+
+[project]
+name = "auth-bot"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+license = {text = "AGPL-3.0"}
+authors = [
+    {name = "cloudw233", email = "cloudw233@outlook.com"},
+    {name = "OasisAkari", email = "oasisakari@teahou.se"},
+    {name = "Dianliang233", email = "dianliang@teahou.se"},
+    {name = "DoroWolf", email = "dorowolf@tehou.se"},
+    {name = "nullcat", email = "null@teahou.se"},
+    {name = "_LittleC_", email = "i@ltlec.com"},
+]
+requires-python = "<4.0.0,>=3.12.0"
+dependencies = [
+    "cryptography<46.0.0,>=45.0.0",
+    "pre-commit<5.0.0,>=4.0.0",
+    "pycryptodome<4.0.0,>=3.18.0",
+    "pywin32<309,>=308",
+    "aiocqhttp<2.0.0,>=1.4.3",
+    "aiogram<4.0.0,>=3.4.1",
+    "argon2-cffi<26.0.0,>=25.0.0",
+    "fastapi<1.0.0,>=0.115.0",
+    "ffmpy<1.0.0,>=0.5.0",
+    "flask<4.0.0,>=3.1.0",
+    "khl-py<1.0.0,>=0.3.16",
+    "matrix-nio<1.0.0,>=0.25.0",
+    "py-cord<3.0.0,>=2.5.0",
+    "pyjwt[crypto]<3.0.0,>=2.8.0",
+    "qq-botpy<2.0.0,>=1.2.1",
+    "slowapi<1.0.0,>=0.1.9",
+    "uvicorn[standard]<1.0.0,>=0.34.0",
+    "inputimeout<2.0.0,>=1.0.4",
+    "prompt-toolkit<4.0.0,>=3.0.47",
+    "cattrs<25.0.0,>=24.1.2",
+    "filetype<2.0.0,>=1.2.0",
+    "orjson<4.0.0,>=3.10.9",
+    "Pillow<12.0.0,>=11.0.0",
+    "tenacity<10.0.0,>=9.0.0",
+    "tomlkit<1.0.0,>=0.13.2",
+    "tortoise-orm[asyncmy]<1.0.0,>=0.25.0",
+    "aiofile<4.0.0,>=3.8.1",
+    "attrs<25.0.0,>=24.2.0",
+    "httpx<1.0.0,>=0.28.1",
+    "jinja2<4.0.0,>=3.1.6",
+    "loguru<1.0.0,>=0.7.0",
+    "ff3<2.0.0,>=1.0.2",
+    "psutil<8.0.0,>=7.0.0",
+    "tabulate<1.0.0,>=0.9.0",
+    "APScheduler<4.0.0.0,>=3.9.1-post.0",
+    "matplotlib<4.0.0,>=3.6.3",
+    "py-cpuinfo<10.0.0,>=9.0.0",
+    "beautifulsoup4<5.0.0,>=4.11.1",
+    "emoji<3.0.0,>=2.12.1",
+    "feedparser<7.0.0,>=6.0.10",
+    "gql<4.0.0,>=3.4.0",
+    "langconv @ git+https://github.com/OasisAkari/langconv.py.git",
+    "numpy<2.2.7",
+    "openai<2.0.0,>=1.6.1",
+    "pandas<3.0.0,>=2.2.0",
+    "pint<1.0.0,>=0.24.0",
+    "python-whois<1.0.0,>=0.9.0",
+    "rdkit<2026.0.0,>=2025.0.0",
+    "simpleeval<2.0.0,>=1.0.0",
+    "webcolors<25.0.0,>=24.0.0",
+    "wolframalpha<6.0.0,>=5.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "autopep8<3.0.0,>=2.0.2",
+    "pycodestyle==2.13.0",
+]
